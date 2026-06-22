@@ -1,0 +1,10 @@
+Cloud computing is the delivery of computing services over the internet, including servers, storage, databases, networking, and software.
+The three main service models are Infrastructure as a Service (IaaS), Platform as a Service (PaaS), and Software as a Service (SaaS).
+IaaS provides virtualized computing resources like virtual machines and storage. Examples include AWS EC2, Google Compute Engine, and Microsoft Azure VMs.
+PaaS provides a platform for developers to build and deploy applications without managing infrastructure. Examples include Heroku, Google App Engine, and AWS Elastic Beanstalk.
+SaaS delivers ready-to-use software applications over the internet. Examples include Gmail, Slack, and Salesforce.
+The major cloud providers are Amazon Web Services (AWS), Microsoft Azure, and Google Cloud Platform (GCP). AWS holds the largest market share.
+Cloud computing offers benefits like scalability, cost efficiency, reliability, and global availability.
+Serverless computing allows developers to run code without provisioning servers. AWS Lambda, Google Cloud Functions, and Azure Functions are popular serverless platforms.
+Containers and orchestration tools like Docker and Kubernetes have become essential for deploying cloud applications at scale.
+Cloud security is a shared responsibility between the cloud provider and the customer, covering areas like identity management, encryption, and network security.

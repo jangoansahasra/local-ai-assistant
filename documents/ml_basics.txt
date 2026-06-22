@@ -1,0 +1,10 @@
+Machine learning is a branch of artificial intelligence that enables computers to learn from data without being explicitly programmed.
+There are three main types of machine learning: supervised learning, unsupervised learning, and reinforcement learning.
+Supervised learning uses labeled data to train models. Common algorithms include linear regression, decision trees, and neural networks.
+Unsupervised learning finds patterns in unlabeled data. Examples include clustering with K-means and dimensionality reduction with PCA.
+Reinforcement learning trains agents to make decisions by rewarding desired behaviors. It is used in game playing, robotics, and autonomous vehicles.
+Deep learning is a subset of machine learning that uses neural networks with many layers. It excels at image recognition, natural language processing, and speech recognition.
+Overfitting occurs when a model learns the training data too well and fails to generalize to new data. Techniques like dropout, regularization, and cross-validation help prevent overfitting.
+Transfer learning allows a model trained on one task to be adapted for a different but related task, saving time and computational resources.
+Common Python libraries for machine learning include scikit-learn, TensorFlow, PyTorch, and Keras.
+The machine learning pipeline typically involves data collection, data cleaning, feature engineering, model training, evaluation, and deployment.
