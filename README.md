@@ -25,6 +25,16 @@ Key UI features:
 - View source documents used for RAG answers
 - Clear chat history during a session
 
+## Demo Screenshots
+
+### Streamlit RAG Chat
+
+![Streamlit RAG Demo](assets/streamlit-rag-demo.png)
+
+### RAG Evaluation Results
+
+![RAG Evaluation Results](assets/rag-eval-results.png)
+
 ## Performance Benchmarks
 
 | Model | Memory | Tokens/sec | TTFT | Avg Latency |
