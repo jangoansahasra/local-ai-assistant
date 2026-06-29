@@ -72,30 +72,32 @@ streamlit run app.py
 ```
 Make sure Ollama is running before starting the Streamlit app.
 
-Recommended Settings
+## Recommended Settings
 
 General chat: temperature 0.7
 RAG/document Q&A: temperature 0.2-0.3
 Structured JSON output: temperature 0.0 with Pydantic validation and retry logic
 Lower temperatures are recommended for RAG because document-grounded answers should stay close to the retrieved context instead of being overly creative.
 
-RAG Validation
+## RAG Validation
 
-The RAG pipeline was tested with sample machine learning and cloud computing documents. Test questions retrieved the correct source documents and generated grounded answers from the retrieved context.
+The RAG pipeline was tested with a dedicated retrieval evaluation script using sample machine learning and cloud computing documents.
 
-Example validation checks:
-Machine learning questions retrieved ml_basics.txt
-Cloud computing questions retrieved cloud_computing.txt
-Out-of-scope questions were handled with an "I don't have enough information" response
-Source documents were displayed with RAG answers in the Streamlit UI
+Evaluation results:
+- Source retrieval accuracy: 6/6 (100.0%)
+- Retrieved content match: 6/6 (100.0%)
+- Machine learning questions retrieved `ml_basics.txt`
+- Cloud computing questions retrieved `cloud_computing.txt`
+- Retrieved chunks contained expected answer terms for each test question
 
-Project Structure
+## Project Structure
 
 local-ai-assistant/
 ├── app.py                  # Streamlit UI with RAG
 ├── main.py                 # FastAPI server
 ├── rag.py                  # RAG engine (ingestion + search)
 ├── rag_chat.py             # CLI RAG chat
+├── rag_eval.py             # RAG retrieval evaluation
 ├── benchmark.py            # Baseline benchmarking
 ├── structured.py           # JSON schema + Pydantic validation
 ├── reliability_test.py     # Temperature comparison
@@ -106,7 +108,7 @@ local-ai-assistant/
 ├── requirements.txt        # Dependencies
 └── documents/              # Knowledge base (PDF/TXT)
 
-Key Findings
+## Key Findings
 
 Llama 3.2 3B achieves 45 tok/s with 105ms TTFT — real-time for end users
 Llama 3.2 3B is 2.4x faster than Mistral 7B while using 53% less memory
@@ -120,18 +122,20 @@ Start the FastAPI server first if you want to run benchmark or structured-output
 python main.py
 ```
 Then in another terminal:
+
 ```bash
 python benchmark.py
 python reliability_test.py
 python model_comparison.py
 python quantization_test.py
+python rag_eval.py
 ```
 For command-line RAG chat:
 ```bash
 python rag.py
 python rag_chat.py
 ```
-Notes
+## Notes
 
 The Streamlit app calls Ollama directly at http://localhost:11434/api/generate.
 Benchmark and structured-output scripts use the FastAPI server at http://localhost:8000/generate.
