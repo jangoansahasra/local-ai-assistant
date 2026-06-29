@@ -87,7 +87,11 @@ with st.sidebar:
     temperature = st.slider("Temperature", 0.0, 1.0, 0.7, 0.1)
     use_rag = st.toggle("📄 Use RAG (chat with documents)", value=False)
 
-    st.divider()
+    effective_temperature = 0.3 if use_rag else temperature
+    if use_rag:
+         st.caption("RAG mode uses temperature 0.3 for more grounded document answers.")
+
+         st.divider()
 
     # Document upload
     st.header("📁 Documents")
@@ -132,13 +136,15 @@ for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
         if "metrics" in msg:
-            m = msg["metrics"]
-            st.caption(
-                f"📊 {m['tokens_generated']} tokens | "
-                f"{m['tokens_per_second']} tok/s | "
-                f"TTFT: {m['ttft']}s | "
-                f"Latency: {m['latency']}s"
-            )
+               m = msg["metrics"]
+               temp_display = f" | Temp: {m['temperature']}" if "temperature" in m else ""
+               st.caption(
+                     f"📊 {m['tokens_generated']} tokens | "
+                     f"{m['tokens_per_second']} tok/s | "
+                     f"TTFT: {m['ttft']}s | "
+                     f"Latency: {m['latency']}s"
+                     f"{temp_display}"
+                )
         if "sources" in msg:
             st.caption(f"📄 Sources: {msg['sources']}")
 
@@ -164,10 +170,10 @@ if prompt := st.chat_input("Ask me anything..."):
 
             try:
                 response = requests.post(OLLAMA_URL, json={
-                    "model": selected_model,
-                    "prompt": final_prompt,
-                    "temperature": temperature,
-                    "stream": False
+                     "model": selected_model,
+                     "prompt": final_prompt,
+                     "temperature": effective_temperature,
+                     "stream": False
                 }, timeout=120)
 
                 result = response.json()
@@ -183,9 +189,10 @@ if prompt := st.chat_input("Ask me anything..."):
                 answer = result.get("response", "No response received.")
                 st.markdown(answer)
                 st.caption(
-                    f"📊 {eval_count} tokens | {tps} tok/s | "
-                    f"TTFT: {ttft}s | Latency: {latency}s"
-                )
+                            f"📊 {eval_count} tokens | {tps} tok/s | "
+                            f"TTFT: {ttft}s | Latency: {latency}s | "
+                            f"Temp: {effective_temperature}"
+                          )
                 if sources_str:
                     st.caption(f"📄 Sources: {sources_str}")
 
@@ -193,10 +200,11 @@ if prompt := st.chat_input("Ask me anything..."):
                     "role": "assistant",
                     "content": answer,
                     "metrics": {
-                        "tokens_generated": eval_count,
-                        "tokens_per_second": tps,
-                        "ttft": ttft,
-                        "latency": latency
+                               "tokens_generated": eval_count,
+                               "tokens_per_second": tps,
+                               "ttft": ttft,
+                               "latency": latency,
+                               "temperature": effective_temperature
                     }
                 }
                 if sources_str:
