@@ -83,9 +83,25 @@ Temperature 0.7 was slightly more reliable than 0.0 in this test. All failures w
 5. **Source Attribution:** Each response shows which documents were used to generate the answer.
 
 ### RAG Performance
-- Correctly retrieves relevant chunks from the right source documents
-- ML questions pull from ml_basics.txt, cloud questions pull from cloud_computing.txt
-- When asked about topics not in the documents, the model correctly responds with "I don't have enough information"
+
+A dedicated RAG retrieval evaluation script (`rag_eval.py`) was added to test whether the system retrieves the correct source documents and relevant content for known questions.
+
+Evaluation setup:
+- 6 test questions across two document domains
+- 3 machine learning questions targeting `ml_basics.txt`
+- 3 cloud computing questions targeting `cloud_computing.txt`
+- Top 3 retrieved chunks checked for expected source file and expected answer terms
+
+Evaluation results:
+| Metric | Result |
+|--------|--------|
+| Source retrieval accuracy | 6/6 (100.0%) |
+| Retrieved content match | 6/6 (100.0%) |
+
+The evaluation confirmed that:
+- Machine learning questions retrieved `ml_basics.txt`
+- Cloud computing questions retrieved `cloud_computing.txt`
+- Retrieved chunks contained expected answer terms
 - Retrieval adds minimal latency (~50-100ms) on top of generation time
 
 ### Key Takeaway
@@ -113,6 +129,7 @@ local-ai-assistant/
 ├── app.py                  # Streamlit web UI with RAG integration
 ├── rag.py                  # RAG engine (document ingestion + vector search)
 ├── rag_chat.py             # CLI-based RAG chat interface
+├── rag_eval.py             # RAG retrieval evaluation
 ├── benchmark.py            # Baseline benchmarking (10 prompts)
 ├── structured.py           # JSON schema + Pydantic validation
 ├── reliability_test.py     # Temperature 0 vs 0.7 comparison
@@ -133,8 +150,8 @@ local-ai-assistant/
 - **For higher quality when latency is acceptable:** Phi-4 Mini — reasonable tradeoff with better reasoning
 - **For production structured output:** Always use Pydantic validation + retry logic regardless of model
 - **For document Q&A:** RAG with ChromaDB and sentence-transformers provides accurate, source-attributed answers with minimal overhead
+- **For RAG temperature:** Use a lower temperature such as 0.2-0.3 to keep answers grounded in retrieved documents
 - **Cloud vs Local tradeoff:** At 45 TPS with ~100ms TTFT, local inference on M4 is competitive with cloud APIs for single-user workloads, with the added benefits of zero cost per token, full privacy, and no rate limits
-
 ---
 
 ## How to Run the Project
@@ -184,8 +201,9 @@ python benchmark.py           # Baseline performance
 python reliability_test.py    # Temperature comparison
 python model_comparison.py    # 3-model comparison (start FastAPI first)
 python quantization_test.py   # Quantization test (start FastAPI first)
+python rag_eval.py            # RAG retrieval evaluation
 ```
-Note: model_comparison.py and quantization_test.py require the FastAPI server to be running.
+Note: benchmark.py, reliability_test.py, model_comparison.py, and quantization_test.py require the FastAPI server to be running. `rag_eval.py` only tests retrieval, so it does not require FastAPI or Ollama generation.
 
 ### Step 6: Add Documents for RAG
 Place PDF or TXT files in the `documents/` folder, then run:
